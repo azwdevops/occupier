@@ -33,8 +33,7 @@ const Signup = ({ googleSucess, googleFailure }) => {
   });
 
   // refs
-  const btnRef = useRef();
-  const formRef = useRef();
+  const signupFormRef = useRef();
 
   //############### destructuring code ###################//
   const {
@@ -58,20 +57,20 @@ const Signup = ({ googleSucess, googleFailure }) => {
     if (password !== confirm_password) {
       return dispatch(setAlert(error, "Passwords should match"));
     }
-    if (btnRef.current) {
-      formRef.current.setAttribute("id", "pageSubmitting");
-    }
+
+    signupFormRef.current?.setAttribute("id", "pageSubmitting");
+
     // dispatch the loading action
     dispatch({ type: START_LOADING });
 
     // call the signup action creator
     dispatch(signup(newUser));
 
-    // if loading is done remove the attribute
+    // if loading is done remove the attribute, we introduce a slight delay of 1s to allow attribute to work
     if (!loading) {
-      if (btnRef.current) {
-        formRef.current.removeAttribute("id", "pageSubmitting");
-      }
+      setTimeout(() => {
+        signupFormRef.current?.removeAttribute("id", "pageSubmitting");
+      }, 1000);
     }
   };
 
@@ -80,7 +79,7 @@ const Signup = ({ googleSucess, googleFailure }) => {
   };
   return (
     <MediumDialog isOpen={signupForm}>
-      <form className="dialog" ref={formRef}>
+      <form className="dialog" ref={signupFormRef}>
         <h3>Create new account</h3>
         <p className={`response__message ${alert.alertType}`}>
           {alert.status && alert.msg}
@@ -169,7 +168,7 @@ const Signup = ({ googleSucess, googleFailure }) => {
           >
             Close
           </button>
-          <button type="submit" onClick={handleSignup} ref={btnRef}>
+          <button type="submit" onClick={handleSignup}>
             Sign Up
           </button>
         </div>

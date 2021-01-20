@@ -1,11 +1,15 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
-const PrivateRoute = ({ component: Component, session_cookie, ...rest }) => (
+const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={(props) =>
-      !session_cookie ? <Redirect to="/" /> : <Component {...props} />
+      localStorage.getItem("session_cookie") ? (
+        <Component {...props} />
+      ) : (
+        <Redirect to="/" />
+      )
     }
   />
 );

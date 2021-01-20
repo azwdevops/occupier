@@ -3,8 +3,7 @@ from PIL import Image
 
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.contrib.postgres.fields import CIEmailField, CICharField
-from django.db.models import Model, DateField, DateTimeField, BooleanField, UUIDField, ImageField
-
+from django.db.models import Model, DateField, DateTimeField, BooleanField, UUIDField, ImageField, TextField
 
 
 class MyAccountManager(BaseUserManager):
@@ -38,6 +37,7 @@ class User(AbstractBaseUser):
     username = CICharField(max_length=50, unique=True)
     first_name = CICharField(max_length=100)
     last_name = CICharField(max_length=100)
+    bio = TextField(blank=True, null=True)
     date_joined = DateTimeField(
         verbose_name='date joined', auto_now_add=True)
     last_login = DateTimeField(verbose_name='last login', auto_now=True)

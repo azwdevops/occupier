@@ -1,5 +1,5 @@
 // import installed packages
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 // import styles
@@ -15,6 +15,7 @@ import { logout } from "../../redux/actions/auth";
 
 const Sidebar = () => {
   const history = useHistory();
+  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const loggedIn = useSelector((state) => state.auth?.loggedIn);
 
@@ -26,32 +27,42 @@ const Sidebar = () => {
           <span className="nav__logo-name">AZW</span>
         </Link>
         <div className="nav__list">
+          {/* unprotected links */}
+          <>
+            <Link
+              to="/"
+              className={
+                `${pathname}` === "/" ? "nav__link active" : "nav__link"
+              }
+            >
+              <i class="bx bx-home"></i>
+              <span className="nav__name">Home</span>
+            </Link>
+          </>
           {/* protected links */}
           {loggedIn && (
             <>
-              <Link to="/dashboard/" className="nav__link active">
+              <Link
+                to="/dashboard/"
+                className={
+                  `${pathname}` === "/dashboard/"
+                    ? "nav__link active"
+                    : "nav__link"
+                }
+              >
                 <i className="bx bx-grid-alt nav__icon"></i>
                 <span className="nav__name">Dashboard</span>
               </Link>
-              <Link to="" className="nav__link">
-                <i className="bx bx-user nav__icon"></i>
-                <span className="nav__name">Users</span>
-              </Link>
-              <Link to="" className="nav__link">
-                <i className="bx bx-message-square-detail nav__icon"></i>
-                <span className="nav__name">Messages</span>
-              </Link>
-              <Link to="" className="nav__link">
-                <i className="bx bx-bookmark nav__icon"></i>
-                <span className="nav__name">Favorites</span>
-              </Link>
-              <Link to="" className="nav__link">
-                <i className="bx bx-folder nav__icon"></i>
-                <span className="nav__name">Data</span>
-              </Link>
-              <Link to="" className="nav__link">
-                <i className="bx bx-bar-chart-alt-2 nav__icon"></i>
-                <span className="nav__name">Analytics</span>
+              <Link
+                to="/profile/"
+                className={
+                  `${pathname}` === "/profile/"
+                    ? "nav__link active"
+                    : "nav__link"
+                }
+              >
+                <i class="bx bx-user nav__icon"></i>
+                <span className="nav__name">Profile</span>
               </Link>
               <Link
                 to=""
@@ -63,13 +74,6 @@ const Sidebar = () => {
               </Link>
             </>
           )}
-          {/* unprotected links */}
-          <>
-            <Link to="/" className="nav__link">
-              <i class="bx bx-home"></i>
-              <span className="nav__name">Home</span>
-            </Link>
-          </>
         </div>
       </nav>
     </div>

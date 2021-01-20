@@ -6,7 +6,7 @@ import { useParams, useHistory } from "react-router-dom";
 import "../styles/pages/ActivateAccount.css";
 // import material ui items
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { activateAccount } from "../redux/actions/auth";
+import { activate_account } from "../redux/actions/auth";
 
 // import shared/global items
 
@@ -31,7 +31,7 @@ const ActivateAccount = () => {
     if (btnRef.current) {
       pageRef.current.setAttribute("id", "pageSubmitting");
     }
-    dispatch(activateAccount({ uid, token, history }));
+    dispatch(activate_account({ uid, token, history }));
 
     // if loading is done, remove the attribute
     if (!loading) {

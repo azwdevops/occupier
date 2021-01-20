@@ -16,9 +16,12 @@ import Home from "./pages/Home";
 import Sidebar from "./components/common/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import ActivateAccount from "./pages/ActivateAccount";
+import ResetPasswordConfirm from "./pages/ResetPasswordConfirm";
+import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
 
 // import redux API
-import { getuser } from "./redux/actions/auth";
+import { get_user } from "./redux/actions/auth";
 
 function App() {
   const dispatch = useDispatch();
@@ -27,13 +30,13 @@ function App() {
   useEffect(() => {
     // get user on page refresh
     if (session_cookie) {
-      dispatch(getuser());
+      dispatch(get_user());
     }
   }, [dispatch, session_cookie]);
 
   return (
-    <Router>
-      <div id="body-pd">
+    <div id="body-pd">
+      <Router>
         <Header />
         <Sidebar />
         <Switch>
@@ -41,19 +44,21 @@ function App() {
           <Route exact path="/" component={Home} />
           <Route
             exact
+            path="/user/password/reset/confirm/:uid/:token/"
+            component={ResetPasswordConfirm}
+          />
+          <Route
+            exact
             path="/user/activate/:uid/:token/"
             component={ActivateAccount}
           />
           {/* authenticated routes */}
-          <PrivateRoute
-            exact
-            path="/dashboard/"
-            component={Dashboard}
-            session_cookie={session_cookie}
-          />
+          <PrivateRoute exact path="/profile" component={Profile} />
+          <PrivateRoute exact path="/dashboard/" component={Dashboard} />
+          <Route component={NotFound} />
         </Switch>
-      </div>
-    </Router>
+      </Router>
+    </div>
   );
 }
 

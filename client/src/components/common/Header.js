@@ -1,6 +1,6 @@
 // import installed packages
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 // import styles
 
 import "../../styles/components/common/Header.css";
@@ -18,10 +18,13 @@ import { logout } from "../../redux/actions/auth";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const history = useHistory();
   const session_cookie = localStorage.getItem("session_cookie");
   const username = useSelector((state) => state.auth.user?.username);
   const userImage = useSelector((state) => state.auth?.userImage);
+
+  // console.log(location.pathname);
 
   return (
     <>
@@ -43,7 +46,7 @@ const Header = () => {
               </div>
               <ul className="dropdown">
                 <li>
-                  <Link to="/dashboard/">Profile</Link>
+                  <Link to="/dashboard/">Dashboard</Link>
                 </li>
                 <li onClick={() => dispatch(logout(history))}>Logout</li>
               </ul>

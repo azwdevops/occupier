@@ -188,11 +188,10 @@ a {
 .response__message {
   font-weight: bold;
   text-align: center;
-  height: 25px;
+  height: fit-content;
   font-size: 1rem;
   margin-top: 5px auto;
-  padding-bottom: 8px;
-  text-align: center;
+  padding: 4px;
   width: 90%;
   position: absolute;
   max-width: 100%;
