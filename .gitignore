@@ -1,7 +1,7 @@
 # django
 **/venv
 
-
+.env
 
 # react items
 **/node_modules
