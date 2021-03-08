@@ -44,12 +44,12 @@ function App() {
           <Route exact path="/" component={Home} />
           <Route
             exact
-            path="/user/password/reset/confirm/:uid/:token/"
+            path="/user/password-reset/:password_token/"
             component={ResetPasswordConfirm}
           />
           <Route
             exact
-            path="/user/activate/:uid/:token/"
+            path="/user/activate/:activation_token/"
             component={ActivateAccount}
           />
           {/* authenticated routes */}

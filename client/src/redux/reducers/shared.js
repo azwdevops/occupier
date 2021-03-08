@@ -9,7 +9,7 @@ export const sharedInitialState = {
   alert: {
     status: false,
     alertType: "", // either success or error
-    msg: "",
+    detail: "",
   },
   loading: false,
 };

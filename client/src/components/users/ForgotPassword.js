@@ -1,6 +1,6 @@
 // import installed packages
-import { useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { connect } from "react-redux";
 // import styles
 
 // import material ui items
@@ -20,22 +20,25 @@ import {
 import { setAlert } from "../../redux/actions/shared";
 import { reset_password } from "../../redux/actions/auth";
 
-const ForgotPassword = () => {
-  const dispatch = useDispatch();
-  const forgotPasswordForm = useSelector(
-    (state) => state.auth?.forgotPasswordForm
-  );
-  const loading = useSelector((state) => state.shared?.loading);
-  const alert = useSelector((state) => state.shared?.alert);
+const ForgotPassword = (props) => {
+  const { loading, alert, forgotPasswordForm } = props; // extract state from props
+  const { startLoading, newAlert, resetPassword, closeForgotPassword } = props; // extract dispatch actions from props
 
   const [email, setEmail] = useState("");
 
-  const forgotPasswordFormRef = useRef();
-
   //############### destructuring code ###################//
-  const { success, error } = globals;
+  const { error } = globals;
 
   //#################end of destructuring ###########//
+
+  const resetForm = () => {
+    setEmail("");
+  };
+
+  const closeForgotPasswordForm = () => {
+    closeForgotPassword();
+    resetForm();
+  };
 
   // function to reset password (send reset password email)
 
@@ -43,30 +46,19 @@ const ForgotPassword = () => {
     e.preventDefault();
 
     if (email.trim() === "") {
-      return dispatch(setAlert(error, "Email required"));
+      return newAlert(error, "Email required");
     }
-
-    forgotPasswordFormRef.current?.setAttribute("id", "pageSubmitting");
-
-    // dispatch loading action to allow spinner and setting attribute,we introduce a slight delay of 1s to allow attribute to work
-    dispatch({ type: START_LOADING });
+    startLoading();
     // call the signup action creator
-    dispatch(reset_password(email));
-
-    if (!loading) {
-      setEmail("");
-      setTimeout(() => {
-        forgotPasswordFormRef.current?.removeAttribute("id", "pageSubmitting");
-      }, 1000);
-    }
+    resetPassword(email, resetForm);
   };
 
   return (
     <MinDialog isOpen={forgotPasswordForm}>
-      <form className="dialog" ref={forgotPasswordFormRef}>
+      <form className="dialog" id={loading ? "formSubmitting" : ""}>
         <h3>Enter your email to reset password</h3>
         <p className={`response__message ${alert.alertType}`}>
-          {alert.status && alert.msg}
+          {alert.status && alert.detail}
         </p>
         {loading && (
           <CircularProgress
@@ -83,10 +75,7 @@ const ForgotPassword = () => {
         </div>
 
         <div className="form__Buttons">
-          <button
-            type="button"
-            onClick={() => dispatch({ type: CLOSE_FORGOT_PASSWORD })}
-          >
+          <button type="button" onClick={closeForgotPasswordForm}>
             Close
           </button>
           <button type="submit" onClick={sendPasswordResetEmail}>
@@ -98,4 +87,22 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+const mapStateToProps = (state) => {
+  return {
+    loading: state.shared?.loading,
+    alert: state.shared?.alert,
+    forgotPasswordForm: state.auth?.forgotPasswordForm,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    startLoading: () => dispatch({ type: START_LOADING }),
+    newAlert: (type, detail) => dispatch(setAlert(type, detail)),
+    resetPassword: (email, resetForm) =>
+      dispatch(reset_password(email, resetForm)),
+    closeForgotPassword: () => dispatch({ type: CLOSE_FORGOT_PASSWORD }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword);

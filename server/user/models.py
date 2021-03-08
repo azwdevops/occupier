@@ -1,7 +1,11 @@
 import uuid
+from os import sys
+from io import BytesIO
 from PIL import Image
 
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin, Group
 from django.contrib.postgres.fields import CIEmailField, CICharField
 from django.db.models import Model, DateField, DateTimeField, BooleanField, UUIDField, ImageField, TextField
 
@@ -30,7 +34,7 @@ class MyAccountManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = CIEmailField(verbose_name="email",
                          max_length=100, unique=True)
@@ -46,7 +50,7 @@ class User(AbstractBaseUser):
     is_staff = BooleanField(default=False)
     is_superuser = BooleanField(default=False)
     photo = ImageField(
-        upload_to='user_images', default='user_images/avatar.png')
+        upload_to='user_images', default='/user_images/avatar.png')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -65,10 +69,26 @@ class User(AbstractBaseUser):
         return True
 
     def save(self, *args, **kwargs):
-        super(User, self).save(*args, **kwargs)
-        # change image dimensions before saving to ensure consistent displays
         if self.photo:
-            image = Image.open(self.photo)
-            size = (1024, 683)
-            image = image.resize(size, Image.ANTIALIAS)
-            image.save(self.photo.path)
+            # to avoid error opening the file we use the try/catch block
+            try:
+                image = Image.open(self.photo)
+                output = BytesIO()
+                # resize the photo
+                image = image.resize((512, 342))
+                # after modifications, save to the output
+                image.save(output, format='JPEG', quality=90)
+                output.seek(0)
+                # change the image field value to be the newly modified image value
+                self.photo = InMemoryUploadedFile(output, 'ImageField', "%s.jpg" % self.photo.name.split(
+                    '.')[0], 'image/jpeg', sys.getsizeof(output), None)
+            except:
+                pass
+        super(User, self).save(*args, **kwargs)
+
+
+# we add extra fields to the django group model
+Group.add_to_class('is_active', BooleanField(default=True))
+Group.add_to_class('about', CICharField(max_length=400, null=True))
+Group.add_to_class('unique_name', CICharField(
+    max_length=100, null=True, unique=True))

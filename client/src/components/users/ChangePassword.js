@@ -1,13 +1,13 @@
 // import installed packages
-import { useState, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 // import styles
 
 // import material ui items
 import CircularProgress from "@material-ui/core/CircularProgress";
 // import shared/global items
-import { ifEmpty } from "../../shared/sharedFunctions";
+import { ifEmpty, resetFormValues } from "../../shared/sharedFunctions";
 import globals from "../../shared/globals";
 // import components/pages
 import MinDialog from "../common/MinDialog";
@@ -20,16 +20,15 @@ import {
 import { setAlert } from "../../redux/actions/shared";
 import { change_password } from "../../redux/actions/auth";
 
-const ChangePassword = () => {
-  // redux
-  const dispatch = useDispatch();
+const ChangePassword = (props) => {
   const history = useHistory();
-  const userId = useSelector((state) => state.auth.user?.id);
-  const changePasswordForm = useSelector(
-    (state) => state.auth?.changePasswordForm
-  );
-  const alert = useSelector((state) => state.shared?.alert);
-  const loading = useSelector((state) => state.shared?.loading);
+  const { loading, alert, changePasswordForm, userId } = props; // extract state from props
+  const {
+    startLoading,
+    newAlert,
+    changeUserPassword,
+    closeChangePassword,
+  } = props; // extract dispatch actions from props
 
   // internal state
   const [passwords, setPasswords] = useState({
@@ -38,12 +37,19 @@ const ChangePassword = () => {
     confirm_new_password: "",
   });
 
-  const changePasswordFormRef = useRef();
-
   //############### destructuring code ###################//
   const { current_password, new_password, confirm_new_password } = passwords;
   const { error } = globals;
   //#################end of destructuring ###########//
+
+  const resetForm = () => {
+    resetFormValues(passwords);
+  };
+
+  const closeChangePasswordForm = () => {
+    resetForm();
+    closeChangePassword();
+  };
 
   // handle change function
   const handleChange = (e) => {
@@ -53,26 +59,19 @@ const ChangePassword = () => {
   // function to handle password change
   const handlePasswordChange = (e) => {
     e.preventDefault();
-    if (ifEmpty(passwords)) {
-      return dispatch(setAlert(error, "Email and password required"));
-    }
-    changePasswordFormRef.current?.setAttribute("id", "pageSubmitting");
-    // dispatch loading action to allow spinner and setting attribute,we introduce a slight delay of 1s to allow attribute to work
-    dispatch({ type: START_LOADING });
+    // if (ifEmpty(passwords)) {
+    //   return newAlert(error, "All fields are required");
+    // }
+    startLoading();
     // call the signup action creator
-    dispatch(change_password(passwords, userId, history));
-    if (!loading) {
-      setTimeout(() => {
-        changePasswordFormRef.current?.removeAttribute("id", "pageSubmitting");
-      }, 1000);
-    }
+    changeUserPassword(passwords, userId, history, resetForm);
   };
   return (
     <MinDialog isOpen={changePasswordForm}>
-      <form className="dialog" ref={changePasswordFormRef}>
+      <form className="dialog" id={loading ? "formSubmitting" : ""}>
         <h3>Change your password here</h3>
-        <p className={`response__message ${alert.alertType}`}>
-          {alert.status && alert.msg}
+        <p className={`response__message ${alert?.alertType}`}>
+          {alert?.status && alert?.detail}
         </p>
         <div className="dialog__rowSingleItem">
           <label htmlFor="">Old Password</label>
@@ -107,10 +106,7 @@ const ChangePassword = () => {
           />
         </div>
         <div className="form__Buttons">
-          <button
-            type="button"
-            onClick={() => dispatch({ type: CLOSE_CHANGE_PASSWORD })}
-          >
+          <button type="button" onClick={closeChangePasswordForm}>
             Close
           </button>
           <button type="submit" onClick={handlePasswordChange}>
@@ -122,4 +118,23 @@ const ChangePassword = () => {
   );
 };
 
-export default ChangePassword;
+const mapStateToProps = (state) => {
+  return {
+    loading: state.shared?.loading,
+    alert: state.shared?.alert,
+    changePasswordForm: state.auth?.changePasswordForm,
+    userId: state.auth.user?.id,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    startLoading: () => dispatch({ type: START_LOADING }),
+    changeUserPassword: (passwords, userId, history, resetForm) =>
+      dispatch(change_password(passwords, userId, history, resetForm)),
+    closeChangePassword: () => dispatch({ type: CLOSE_CHANGE_PASSWORD }),
+    newAlert: (type, detail) => dispatch(setAlert(type, detail)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChangePassword);

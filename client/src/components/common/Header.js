@@ -11,6 +11,8 @@ import { showNavbar } from "../../shared/scripts";
 // import components/pages
 import Login from "../users/Login";
 import Signup from "../users/Signup";
+import ForgotPassword from "../users/ForgotPassword";
+import ReactivateAccount from "../users/ReactivateAccount";
 
 // import redux API
 import { OPEN_LOGIN, OPEN_SIGNUP } from "../../redux/actions/types";
@@ -72,6 +74,8 @@ const Header = () => {
       {/* components */}
       <Login />
       <Signup />
+      <ForgotPassword />
+      <ReactivateAccount />
     </>
   );
 };

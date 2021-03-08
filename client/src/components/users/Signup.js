@@ -1,26 +1,23 @@
 // import installed packages
-import { useState, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { GoogleLogin } from "react-google-login";
+import { useState } from "react";
+import { connect } from "react-redux";
 // import styles
 
 // import material ui items
 import CircularProgress from "@material-ui/core/CircularProgress";
 // import shared/global items
 import globals from "../../shared/globals";
-import { ifEmpty } from "../../shared/sharedFunctions";
+import { ifEmpty, resetFormValues } from "../../shared/sharedFunctions";
 // import components/pages
 import MediumDialog from "../common/MediumDialog";
 // import redux API
 import { CLOSE_SIGNUP, START_LOADING } from "../../redux/actions/types";
-import { signup } from "../../redux/actions/auth";
+import { signup_user } from "../../redux/actions/auth";
 import { setAlert } from "../../redux/actions/shared";
 
-const Signup = ({ googleSucess, googleFailure }) => {
-  const dispatch = useDispatch();
-  const signupForm = useSelector((state) => state.auth.signupForm);
-  const alert = useSelector((state) => state.shared.alert);
-  const loading = useSelector((state) => state.shared?.loading);
+const Signup = (props) => {
+  const { loading, signupForm, alert } = props; // get state from props
+  const { startLoading, closeSignup, newAlert, signupUser } = props; // get dispatch actions from props
 
   // internal state
   const [newUser, setNewUser] = useState({
@@ -31,9 +28,6 @@ const Signup = ({ googleSucess, googleFailure }) => {
     password: "",
     confirm_password: "",
   });
-
-  // refs
-  const signupFormRef = useRef();
 
   //############### destructuring code ###################//
   const {
@@ -48,30 +42,30 @@ const Signup = ({ googleSucess, googleFailure }) => {
 
   //#################end of destructuring ###########//
 
+  const resetForm = () => {
+    resetFormValues(newUser);
+  };
+
+  const closeSignupForm = () => {
+    closeSignup();
+    resetForm();
+  };
+
   const handleSignup = (e) => {
     e.preventDefault();
     if (ifEmpty(newUser)) {
-      return dispatch(setAlert(error, fillFields));
+      return newAlert(error, fillFields);
     }
     // confirm passwords match
     if (password !== confirm_password) {
-      return dispatch(setAlert(error, "Passwords should match"));
+      return newAlert(error, "Passwords should match");
     }
-
-    signupFormRef.current?.setAttribute("id", "pageSubmitting");
 
     // dispatch the loading action
-    dispatch({ type: START_LOADING });
+    startLoading();
 
     // call the signup action creator
-    dispatch(signup(newUser));
-
-    // if loading is done remove the attribute, we introduce a slight delay of 1s to allow attribute to work
-    if (!loading) {
-      setTimeout(() => {
-        signupFormRef.current?.removeAttribute("id", "pageSubmitting");
-      }, 1000);
-    }
+    signupUser(newUser, resetForm);
   };
 
   const handleChange = (e) => {
@@ -79,10 +73,10 @@ const Signup = ({ googleSucess, googleFailure }) => {
   };
   return (
     <MediumDialog isOpen={signupForm}>
-      <form className="dialog" ref={signupFormRef}>
+      <form className="dialog" id={loading ? "formSubmitting" : ""}>
         <h3>Create new account</h3>
         <p className={`response__message ${alert.alertType}`}>
-          {alert.status && alert.msg}
+          {alert.status && alert.detail}
         </p>
         <div className="dialog__row">
           <label htmlFor="" className="label__left">
@@ -108,6 +102,11 @@ const Signup = ({ googleSucess, googleFailure }) => {
             required
           />
         </div>
+        {loading && (
+          <CircularProgress
+            style={{ position: "absolute", marginLeft: "43%" }}
+          />
+        )}
         <div className="dialog__row">
           <label htmlFor="" className="label__left">
             Username
@@ -132,11 +131,7 @@ const Signup = ({ googleSucess, googleFailure }) => {
             required
           />
         </div>
-        {loading && (
-          <CircularProgress
-            style={{ position: "absolute", marginLeft: "43%" }}
-          />
-        )}
+
         <div className="dialog__row">
           <label htmlFor="" className="label__left">
             Password
@@ -162,32 +157,35 @@ const Signup = ({ googleSucess, googleFailure }) => {
           />
         </div>
         <div className="form__Buttons">
-          <button
-            type="button"
-            onClick={() => dispatch({ type: CLOSE_SIGNUP })}
-          >
+          <button type="button" onClick={closeSignupForm}>
             Close
           </button>
           <button type="submit" onClick={handleSignup}>
             Sign Up
           </button>
         </div>
-        <div className="extra__formButtons">
-          <GoogleLogin
-            clientId="419209056133-go6htupj48ppega1d66bj5suhvd9f6ic.apps.googleusercontent.com"
-            render={(renderProps) => (
-              <button onClick={renderProps.onClick} className="google__signin">
-                Sign Up With Google
-              </button>
-            )}
-            onSuccess={googleSucess}
-            onFailure={googleFailure}
-            cookiePolicy="single_host_origin"
-          />
-        </div>
+        <div className="extra__formButtons"></div>
       </form>
     </MediumDialog>
   );
 };
 
-export default Signup;
+const mapStateToProps = (state) => {
+  return {
+    signupForm: state.auth.signupForm,
+    alert: state.shared?.alert,
+    loading: state.shared?.loading,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    startLoading: () => dispatch({ type: START_LOADING }),
+    closeSignup: () => dispatch({ type: CLOSE_SIGNUP }),
+    newAlert: (type, detail) => dispatch(setAlert(type, detail)),
+    signupUser: (newUser, resetForm) =>
+      dispatch(signup_user(newUser, resetForm)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

@@ -1,24 +1,11 @@
-import axios from "axios";
-
-const API = axios.create({ baseURL: "http://localhost:8000" });
-
-API.interceptors.request.use((req) => {
-  if (localStorage.getItem("session_cookie")) {
-    req.headers.Authorization = `Bearer ${localStorage.getItem(
-      "session_cookie"
-    )}`;
-    req.headers.Accept = "application/json";
-  }
-  return req;
-});
-
+import API from "../shared/axios";
 // user routes
 
 // signup
-export const signUp = (newUser) => API.post("/api/user/signup/", newUser);
+export const signupUser = (newUser) => API.post("/api/user/signup/", newUser);
 // activate user account
-export const activateAccount = (uid, token) =>
-  API.post("/api/auth/users/activation/", { uid, token }); // djoser url
+export const activateAccount = (activation_token) =>
+  API.post("/api/user/activate-user-account/", { activation_token });
 
 // resend account activation email
 export const resendActivation = (email) =>
@@ -27,13 +14,16 @@ export const resendActivation = (email) =>
 // sign in user
 export const signIn = (loginData) => API.post("/api/user/login/", loginData);
 
-// send password reset email, this is a djoser url
+// send password reset email
 export const resetPassword = (email) =>
-  API.post("/api/auth/users/reset_password/", { email });
+  API.post("/api/user/user-request-password-reset/", { email });
 
-// set new password using reset link sent from above, this is also a djoser url
-export const setPassword = (newPasswords) =>
-  API.post("/api/auth/users/reset_password_confirm/", newPasswords);
+// set new password using reset link sent from above
+export const setPassword = (newPasswords, password_token) =>
+  API.post("/api/user/user-set-new-password/", {
+    ...newPasswords,
+    password_token,
+  });
 
 // patch user data
 export const updateUser = (updatedUser, userId) =>

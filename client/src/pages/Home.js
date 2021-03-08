@@ -1,3 +1,5 @@
+import API from "../shared/axios";
+
 const Home = () => {
   return (
     <div>

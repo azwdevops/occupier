@@ -1,12 +1,18 @@
 import re
+import os
+from datetime import datetime, timedelta
+
+import jwt
 
 from django.contrib.auth import get_user_model
 
-from djoser.conf import settings
-from djoser.compat import get_user_email
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.response import Response
 
 User = get_user_model()
+
+# keys used for encoding and decoding
+token_generation_key = os.environ['TOKEN_GENERATION_SECRET']
 
 # validate password
 
@@ -34,18 +40,6 @@ def fields_empty(fields):
             return True
     return False
 
-# function to send user aaccount activation email
-
-
-def send_user_activation_email(request, user):
-    # now to send the activation email
-    context = {'user': user}
-    to = [get_user_email(user)]
-    if settings.SEND_ACTIVATION_EMAIL:
-        settings.EMAIL.activation(request, context).send(to)
-    elif settings.SEND_CONFIRMATION_EMAIL:
-        settings.EMAIL.confirmation(request, context)
-
 
 # verify user using django simple jwt
 def verify_user(request, userId):
@@ -62,3 +56,44 @@ def verify_user(request, userId):
             return None
     except User.DoesNotExist:
         return None
+
+
+#####################################  GET FUNCTIONS - TO GET OBJECTS FROM THE DATABASE #######################################
+# custom function to get object or return none if not found
+
+def get_object_or_none(model_name, **kwargs):
+    try:
+        obj = model_name.objects.get(**kwargs)
+        return obj
+    except model_name.DoesNotExist:
+        return None
+
+
+
+#### TOKEN RELATED GENERATION, ENCODING AND DECODING
+
+# method to generate an encoded token
+def generate_encoded_token(**kwargs):
+    # kwargs can be any number of arguments in their key value pairs
+    payload = {
+        **kwargs,
+        "exp":datetime.utcnow() + timedelta(hours=24)
+    }
+    encoded_token = jwt.encode(payload, token_generation_key, algorithm="HS256")
+    return encoded_token
+
+
+# method to decode an encoded token
+def decode_token(token):
+    try:
+        decode_token = jwt.decode(token, token_generation_key, algorithms=["HS256"])
+        return decode_token
+    except jwt.ExpiredSignatureError:
+        return 'expired token'
+    except jwt.DecodeError:
+        return 'invalid token'
+
+
+####### return error functions
+def unknown_error():
+    return Response({'detail': 'An unknown error occurred'}, status=400)

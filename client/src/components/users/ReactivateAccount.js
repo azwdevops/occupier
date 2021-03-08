@@ -1,6 +1,6 @@
 // import installed packages
-import { useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { connect } from "react-redux";
 // import styles
 
 // import material ui items
@@ -19,50 +19,49 @@ import {
 import { resend_activation } from "../../redux/actions/auth";
 import { setAlert } from "../../redux/actions/shared";
 
-const ReactivateAccount = () => {
-  const dispatch = useDispatch();
-  const resendActivationForm = useSelector(
-    (state) => state.auth?.resendActivationForm
-  );
-  const alert = useSelector((state) => state.shared?.alert);
-  const loading = useSelector((state) => state.shared?.loading);
+const ReactivateAccount = (props) => {
+  const { loading, alert, resendActivationForm } = props; // extract state from props
+  const {
+    startLoading,
+    newAlert,
+    closeResendActivation,
+    resendActivation,
+  } = props; // extract dispatch actions from props
+
   const [email, setEmail] = useState("");
 
-  const reactivateAccountFormRef = useRef();
-
   // ###################### destructuring to make code organized ######################### //
-  const { success, error } = globals;
+  const { error } = globals;
   // ###################### end destructuring to make code organized ######################### //
+
+  const resetForm = () => {
+    setEmail("");
+  };
+
+  const closeResendActivationForm = () => {
+    closeResendActivation();
+    resetForm();
+  };
 
   // function to resend confirmation link
   const resendAccountConfirmationLink = (e) => {
     e.preventDefault();
     if (email.trim() === "") {
-      return dispatch(setAlert(error, "Email required"));
+      return newAlert(error, "Email required");
     }
-    reactivateAccountFormRef.current?.setAttribute("id", "pageSubmitting");
-    // dispatch loading action to allow spinner and setting attribute,we introduce a slight delay of 1s to allow attribute to work
-    dispatch({ type: START_LOADING });
+    startLoading();
     // call the signup action creator
-    dispatch(resend_activation(email));
-
-    if (!loading) {
-      setTimeout(() => {
-        reactivateAccountFormRef.current?.removeAttribute(
-          "id",
-          "pageSubmitting"
-        );
-      }, 1000);
-    }
+    resendActivation(email, resetForm);
   };
+
   return (
     <MinDialog
       isOpen={resendActivationForm} // since the styles of min width applied globally is affecting the reactivate form width, apply inline styles
     >
-      <form className="dialog" ref={reactivateAccountFormRef}>
+      <form className="dialog" id={loading ? "formSubmitting" : ""}>
         <h3>Enter email to resend confirmation link</h3>
         <p className={`response__message ${alert.alertType}`}>
-          {alert.status && alert.msg}
+          {alert.status && alert.detail}
         </p>
         {loading && (
           <CircularProgress
@@ -80,10 +79,7 @@ const ReactivateAccount = () => {
         </div>
 
         <div className="form__Buttons">
-          <button
-            type="button"
-            onClick={() => dispatch({ type: CLOSE_RESEND_ACTIVATION })}
-          >
+          <button type="button" onClick={closeResendActivationForm}>
             Close
           </button>
           <button type="submit" onClick={resendAccountConfirmationLink}>
@@ -95,4 +91,22 @@ const ReactivateAccount = () => {
   );
 };
 
-export default ReactivateAccount;
+const mapStateToProps = (state) => {
+  return {
+    loading: state.shared?.loading,
+    alert: state.shared?.alert,
+    resendActivationForm: state.auth?.resendActivationForm,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    startLoading: () => dispatch({ type: START_LOADING }),
+    newAlert: (type, detail) => dispatch(setAlert(type, detail)),
+    closeResendActivation: () => dispatch({ type: CLOSE_RESEND_ACTIVATION }),
+    resendActivation: (email, resetForm) =>
+      dispatch(resend_activation(email, resetForm)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ReactivateAccount);

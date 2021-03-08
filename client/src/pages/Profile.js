@@ -1,6 +1,6 @@
 // import installed packages
-import { useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { connect } from "react-redux";
 
 // import styles
 import "../styles/pages/Profile.css";
@@ -14,27 +14,29 @@ import ChangePassword from "../components/users/ChangePassword";
 import { OPEN_CHANGE_PASSWORD, START_LOADING } from "../redux/actions/types";
 import { update_user } from "../redux/actions/auth";
 
-const Profile = () => {
-  const dispatch = useDispatch();
-  const first_name = useSelector((state) => state.auth.user?.first_name);
-  const last_name = useSelector((state) => state.auth.user?.last_name);
-  const username = useSelector((state) => state.auth.user?.username);
-  const email = useSelector((state) => state.auth.user?.email);
-  const bio = useSelector((state) => state.auth.user?.bio);
-  const userId = useSelector((state) => state.auth.user?.id);
-  const loading = useSelector((state) => state.shared?.loading);
-
+const Profile = (props) => {
+  const {
+    first_name,
+    last_name,
+    username,
+    email,
+    bio,
+    userId,
+    loading,
+  } = props; // extract state from props
+  const { startLoading, updateUser, openChangePassword } = props; // extract dispatch actions from props
   // internal state
-  const [updatedUser, setUpdatedUser] = useState({
-    first_name: first_name,
-    last_name: last_name,
-    username: username,
-    email: email,
-    bio: bio,
-  });
+  const [updatedUser, setUpdatedUser] = useState({});
 
-  // refs
-  const profilePageRef = useRef();
+  useEffect(() => {
+    setUpdatedUser({
+      first_name,
+      last_name,
+      username,
+      email,
+      bio,
+    });
+  }, [first_name, last_name, email, username, bio]);
 
   // function to update user details
   const updateUserDetails = (e) => {
@@ -42,16 +44,9 @@ const Profile = () => {
     if (ifEmpty(updatedUser)) {
       alert("Fill all fields are to update your profile");
     }
-    profilePageRef.current?.setAttribute("id", "pageSubmitting");
-    // dispatch loading action to allow spinner and setting attribute,we introduce a slight delay of 1s to allow attribute to work
-    dispatch({ type: START_LOADING });
+    startLoading();
     // call the signup action creator
-    dispatch(update_user(updatedUser, userId));
-    if (!loading) {
-      setTimeout(() => {
-        profilePageRef.current?.removeAttribute("id", "pageSubmitting");
-      }, 1000);
-    }
+    updateUser(updatedUser, userId);
   };
 
   // handle change function
@@ -60,7 +55,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="profile" ref={profilePageRef}>
+    <div className="profile" id={loading ? "formSubmitting" : ""}>
       <h2>Profile Details</h2>
       <div className="profile__row">
         <span>
@@ -68,9 +63,8 @@ const Profile = () => {
           <input
             type="text"
             name="first_name"
-            value={first_name}
+            value={updatedUser.first_name}
             onChange={handleChange}
-            disabled
           />
         </span>
         <span>
@@ -78,21 +72,22 @@ const Profile = () => {
           <input
             type="text"
             name="last_name"
-            value={last_name}
+            value={updatedUser.last_name}
             onChange={handleChange}
-            disabled
           />
         </span>
       </div>
+      {loading && (
+        <CircularProgress style={{ position: "absolute", marginLeft: "30%" }} />
+      )}
       <div className="profile__row">
         <span>
           <label htmlFor="">Username</label>
           <input
             type="text"
             name="username"
-            value={username}
+            value={updatedUser.username}
             onChange={handleChange}
-            disabled
           />
         </span>
         <span>
@@ -100,24 +95,21 @@ const Profile = () => {
           <input
             type="email"
             name="email"
-            value={email}
+            value={updatedUser.email}
             onChange={handleChange}
-            disabled
           />
         </span>
       </div>
-      {loading && (
-        <CircularProgress style={{ position: "absolute", marginLeft: "30%" }} />
-      )}
+
       <div className="profile__rowSingleItem">
         <label htmlFor="">Bio</label>
-        <textarea name="bio" value={bio} onChange={handleChange}></textarea>
+        <textarea name="bio" value={updatedUser.bio} onChange={handleChange} />
       </div>
       <div className="profile__Buttons">
         <button
           type="button"
           className="change__password"
-          onClick={() => dispatch({ type: OPEN_CHANGE_PASSWORD })}
+          onClick={openChangePassword}
         >
           Change Password
         </button>
@@ -132,4 +124,25 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+const mapStateToProps = (state) => {
+  return {
+    first_name: state.auth.user?.first_name,
+    last_name: state.auth.user?.last_name,
+    username: state.auth.user?.username,
+    email: state.auth.user?.email,
+    bio: state.auth.user?.bio,
+    userId: state.auth.user?.id,
+    loading: state.shared?.loading,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    startLoading: () => dispatch({ type: START_LOADING }),
+    updateUser: (updatedUser, userId) =>
+      dispatch(update_user(updatedUser, userId)),
+    openChangePassword: () => dispatch({ type: OPEN_CHANGE_PASSWORD }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
