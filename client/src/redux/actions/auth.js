@@ -176,35 +176,36 @@ export const update_user = (updatedUser, userId) => async (dispatch) => {
 export const change_password = (passwords, userId, history) => async (
   dispatch
 ) => {
-  try {
-    // destructure the payload got from the request
-    const { data } = await api.changePassword(passwords, userId);
-    alert(success, "Password changed successfully.");
-    dispatch({ type: actionTypes.CLOSE_CHANGE_PASSWORD });
-    dispatch(logout(history));
-  } catch (err) {
-    if (err.response?.status === 400) {
-      dispatch(setAlert(error, err.response.data?.detail));
-    } else {
-      dispatch(setAlert(error, "An error occurred, please try again later"));
-    }
-  } finally {
-    dispatch({ type: actionTypes.STOP_LOADING });
-  }
+  await api
+    .changePassword(passwords, userId)
+    .then((res) => {
+      alert(success, res.data?.detail);
+      dispatch({ type: actionTypes.CLOSE_CHANGE_PASSWORD });
+      dispatch(logout(history));
+    })
+    .catch((err) => {
+      if (err.response?.status === 400) {
+        dispatch(setAlert(error, err.response.data?.detail));
+      } else {
+        dispatch(setAlert(error, unknown_error));
+      }
+    })
+    .finally(() => {
+      dispatch({ type: actionTypes.STOP_LOADING });
+    });
 };
 
 // get user data
 export const get_user = () => async (dispatch) => {
-  try {
-    // destructure the payload got from the request
-    const { data } = await api.getUser();
-    // dispatch success message
-    dispatch({ type: actionTypes.AUTH_SUCCESS, payload: data?.user });
-  } catch (error) {
-    dispatch({ type: actionTypes.LOGOUT });
-    localStorage.clear();
-    console.log(error);
-  }
+  await api
+    .getUser()
+    .then((res) => {
+      dispatch({ type: actionTypes.AUTH_SUCCESS, payload: res.data?.user });
+    })
+    .catch((err) => {
+      dispatch({ type: actionTypes.LOGOUT });
+      localStorage.clear();
+    });
 };
 
 // logout user
