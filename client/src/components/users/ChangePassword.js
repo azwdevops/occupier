@@ -59,9 +59,9 @@ const ChangePassword = (props) => {
   // function to handle password change
   const handlePasswordChange = (e) => {
     e.preventDefault();
-    // if (ifEmpty(passwords)) {
-    //   return newAlert(error, "All fields are required");
-    // }
+    if (ifEmpty(passwords)) {
+      return newAlert(error, "All fields are required");
+    }
     startLoading();
     // call the signup action creator
     changeUserPassword(passwords, userId, history, resetForm);

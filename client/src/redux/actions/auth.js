@@ -182,6 +182,7 @@ export const change_password = (passwords, userId, history) => async (
       alert(success, res.data?.detail);
       dispatch({ type: actionTypes.CLOSE_CHANGE_PASSWORD });
       dispatch(logout(history));
+      dispatch({ type: actionTypes.OPEN_LOGIN });
     })
     .catch((err) => {
       if (err.response?.status === 400) {

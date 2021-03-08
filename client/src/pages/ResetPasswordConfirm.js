@@ -61,9 +61,9 @@ const ResetPasswordConfirm = (props) => {
   // function to submit new password
   const handleSetNewPassword = (e) => {
     e.preventDefault();
-    // if (ifEmpty(newPasswords)) {
-    //   return newAlert(error, "Both fields are required");
-    // }
+    if (ifEmpty(newPasswords)) {
+      return newAlert(error, "Both fields are required");
+    }
     startLoading();
 
     // call the signup action creator
