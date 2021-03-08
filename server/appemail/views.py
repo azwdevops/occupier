@@ -26,7 +26,7 @@ class SendTokenEmail:
     @classmethod
     def send_user_activation_email(self, user):
         activation_token = self.get_encoded_token(self, user)
-        subject = "Account activation on AZW"
+        subject = f"Account activation on {domain_name}"
         body_text=f'Click this link to activate your account {domain_url}/user/activate/{activation_token}/'
         body_html = f"\
             <p>Hi {user.username},</p><br/>\
@@ -49,7 +49,7 @@ class SendTokenEmail:
     @classmethod
     def send_password_reset_email(self, user):
         password_reset_token = self.get_encoded_token(self, user)
-        subject = "Account password reset on AZW"
+        subject = f"Account password reset on {domain_name}"
         body_text=f'Click this link to reset your account password {domain_url}/user/password-reset/{password_reset_token}/'
         body_html = f"\
             <p>Hi {user.username},</p><br/>\
