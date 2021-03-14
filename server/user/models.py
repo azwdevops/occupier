@@ -9,6 +9,8 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, Permis
 from django.contrib.postgres.fields import CIEmailField, CICharField
 from django.db.models import Model, DateField, DateTimeField, BooleanField, UUIDField, ImageField, TextField
 
+from user.choices import locations, account_types
+
 
 class MyAccountManager(BaseUserManager):
     def create_user(self, email, username, password=None):
@@ -41,6 +43,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = CICharField(max_length=50, unique=True)
     first_name = CICharField(max_length=100)
     last_name = CICharField(max_length=100)
+    phone = CICharField(max_length=20, unique=True)
+    location = CICharField(max_length=255, choices=locations)
+    account_type = CICharField(max_length=100, choices=account_types)
     bio = TextField(blank=True, null=True)
     date_joined = DateTimeField(
         verbose_name='date joined', auto_now_add=True)

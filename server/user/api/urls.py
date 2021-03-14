@@ -8,6 +8,8 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     # api urls
+    path('get-account-types-locations/', views.get_account_types_and_locations,
+         name='get_account_types_and_locations'),  # get locations and account types
     path('signup/', views.register_user,
          name='register_user'),  # register new user
     path('login/', TokenObtainPairView.as_view(),
@@ -16,10 +18,13 @@ urlpatterns = [
          name='resend_user_activation_email'),  # resend user activation email
     path('change-user-password/<userId>/', views.change_user_password,
          name='change_user_password'),  # change user password
-     
-    path('activate-user-account/', views.activate_user_account, name='activate_user_account'), # activate user account
-    path('user-request-password-reset/', views.user_request_password_reset, name='user_request_password_reset'), # user request password reset
-    path('user-set-new-password/', views.user_set_new_password, name='user_set_new_password'), # user set new password
+
+    path('activate-user-account/', views.activate_user_account,
+         name='activate_user_account'),  # activate user account
+    path('user-request-password-reset/', views.user_request_password_reset,
+         name='user_request_password_reset'),  # user request password reset
+    path('user-set-new-password/', views.user_set_new_password,
+         name='user_set_new_password'),  # user set new password
 
     # patch urls
     path('update-user-details/<userId>/', views.update_user_details,

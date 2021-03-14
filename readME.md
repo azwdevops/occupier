@@ -17,3 +17,6 @@ frontend uses react and redux(for state management)
 2. activate your virtual environment
 3. run pip install -r requirements.txt (this installs the django packages)
 4. create a postgres database
+
+
+=> frontend api => define type => dispatch action => reducer => component => backend views(business login) => urls

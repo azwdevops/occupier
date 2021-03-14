@@ -1,6 +1,9 @@
 import API from "../shared/axios";
 // user routes
 
+// get locations/account types
+export const getAccountTypesAndLocations = () =>
+  API.get("/api/user/get-account-types-locations/");
 // signup
 export const signupUser = (newUser) => API.post("/api/user/signup/", newUser);
 // activate user account

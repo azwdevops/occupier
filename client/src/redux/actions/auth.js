@@ -11,6 +11,22 @@ import globals from "../../shared/globals";
 
 const { error, success, unknown_error } = globals;
 
+// get account types and locations
+export const get_account_types_and_locations = () => async (dispatch) => {
+  await api
+    .getAccountTypesAndLocations()
+    .then((res) => {
+      dispatch({
+        type: actionTypes.SET_ACCOUNTS_LOCATIONS,
+        payload: {
+          account_types: res.data?.account_types,
+          locations: res.data?.locations,
+        },
+      });
+    })
+    .catch((err) => {});
+};
+
 // sign up user
 export const signup_user = (newUser, resetForm) => async (dispatch) => {
   await api

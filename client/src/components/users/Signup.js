@@ -1,5 +1,5 @@
 // import installed packages
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 // import styles
 
@@ -12,12 +12,21 @@ import { ifEmpty, resetFormValues } from "../../shared/sharedFunctions";
 import MediumDialog from "../common/MediumDialog";
 // import redux API
 import { CLOSE_SIGNUP, START_LOADING } from "../../redux/actions/types";
-import { signup_user } from "../../redux/actions/auth";
+import {
+  get_account_types_and_locations,
+  signup_user,
+} from "../../redux/actions/auth";
 import { setAlert } from "../../redux/actions/shared";
 
 const Signup = (props) => {
-  const { loading, signupForm, alert } = props; // get state from props
-  const { startLoading, closeSignup, newAlert, signupUser } = props; // get dispatch actions from props
+  const { loading, signupForm, alert, locations, account_types } = props; // get state from props
+  const {
+    startLoading,
+    closeSignup,
+    newAlert,
+    signupUser,
+    getAccountTypesLocations,
+  } = props; // get dispatch actions from props
 
   // internal state
   const [newUser, setNewUser] = useState({
@@ -27,7 +36,17 @@ const Signup = (props) => {
     email: "",
     password: "",
     confirm_password: "",
+    phone: "",
+    location: "",
+    account_type: "",
   });
+
+  // get the locations/account types available from the backend
+  useEffect(() => {
+    if (locations?.length === 0 || account_types?.length === 0) {
+      getAccountTypesLocations();
+    }
+  }, [locations?.length, account_types?.length, getAccountTypesLocations]);
 
   //############### destructuring code ###################//
   const {
@@ -37,6 +56,9 @@ const Signup = (props) => {
     email,
     password,
     confirm_password,
+    phone,
+    location,
+    account_type,
   } = newUser;
   const { error, fillFields } = globals;
 
@@ -131,7 +153,36 @@ const Signup = (props) => {
             required
           />
         </div>
-
+        <div className="dialog__row">
+          <label htmlFor="" className="label__left">
+            Phone
+          </label>
+          <input
+            type="number"
+            name="phone"
+            className="input__left"
+            minLength="10"
+            maxLength="10"
+            value={phone}
+            onChange={handleChange}
+          />
+          <label htmlFor="" className="label__right">
+            Location
+          </label>
+          <select
+            name="location"
+            className="select__right"
+            value={location}
+            onChange={handleChange}
+          >
+            <option value="">Select location</option>
+            {locations?.map((location, index) => (
+              <option value={location} key={index}>
+                {location}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="dialog__row">
           <label htmlFor="" className="label__left">
             Password
@@ -156,6 +207,24 @@ const Signup = (props) => {
             required
           />
         </div>
+        <div className="dialog__row">
+          <label htmlFor="" className="label__left">
+            Account Type
+          </label>
+          <select
+            name="account_type"
+            className="select__left"
+            value={account_type}
+            onChange={handleChange}
+          >
+            <option value="">Select account type</option>
+            {account_types?.map((account_type, index) => (
+              <option value={account_type} key={index}>
+                {account_type}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="form__Buttons">
           <button type="button" onClick={closeSignupForm}>
             Close
@@ -175,6 +244,8 @@ const mapStateToProps = (state) => {
     signupForm: state.auth.signupForm,
     alert: state.shared?.alert,
     loading: state.shared?.loading,
+    locations: state.auth.locations,
+    account_types: state.auth.account_types,
   };
 };
 
@@ -185,6 +256,7 @@ const mapDispatchToProps = (dispatch) => {
     newAlert: (type, detail) => dispatch(setAlert(type, detail)),
     signupUser: (newUser, resetForm) =>
       dispatch(signup_user(newUser, resetForm)),
+    getAccountTypesLocations: () => dispatch(get_account_types_and_locations()),
   };
 };
 

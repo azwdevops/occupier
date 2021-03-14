@@ -10,6 +10,8 @@ const initialState = {
   resetPasswordConfirmForm: false,
   changePasswordForm: false,
   user: {},
+  account_types: [],
+  locations: [],
 };
 
 const authReducer = (state = initialState, action) => {
@@ -25,6 +27,13 @@ const authReducer = (state = initialState, action) => {
         ...state,
         signupForm: false,
       };
+    case actionTypes.SET_ACCOUNTS_LOCATIONS:
+      return {
+        ...state,
+        account_types: payload.account_types,
+        locations: payload.locations,
+      };
+
     case actionTypes.OPEN_LOGIN:
       return {
         ...state,
