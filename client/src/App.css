@@ -8,6 +8,9 @@
   --first-color: #4723d9;
   --first-color-light: #afa5d9;
   --white-color: #f7f6fb;
+  --theme-color-1:dodgerblue;
+  --theme-color-2:#5e1bc2;
+
 
   /*===== Font and typography =====*/
   --body-font: "Nunito", sans-serif;
@@ -43,6 +46,8 @@ button {
   cursor: pointer;
   border: none;
   outline: none;
+  padding:5px 10px;
+  border-radius: 15px;
 }
 .button:hover,
 button:hover {
@@ -167,12 +172,125 @@ a {
   color: dodgerblue;
   font-weight: bold;
 }
-.google__signin {
-  padding: 8px 15px;
-  background-color: #6851fc;
+
+.button__sp {
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+.add__button {
+  background: linear-gradient(
+    to right,
+    var(--theme-color-1),
+    var(--theme-color-2)
+  );
+  color: #ffffff;
+  margin-top: 5px;
+}
+.delete__button {
+  background-color: red;
+}
+.edit__button {
+  background-color: green;
+}
+
+a {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+/* CUSTOM CLASSES STYLING */
+.white {
   color: white;
+}
+.dodgerblue {
+  color: dodgerblue;
+}
+.green {
+  color: green;
+}
+.red {
+  color: red;
+}
+.bg-dodgerblue {
+  background-color: dodgerblue;
+}
+.bg-green {
+  background-color: green;
+}
+.bg-red {
+  background-color: red;
+}
+.bd {
   font-weight: 700;
-  border-radius: 20px;
+}
+.ud {
+  text-decoration: underline;
+}
+.tc {
+  text-align: center;
+}
+
+/* table styling */
+.table__parent {
+  max-width:100%;
+  margin:10vh auto 20px auto;
+}
+
+.table__parentHeader {
+  text-align: center;
+}
+.table__parentHeader > h3 {
+  color: dodgerblue;
+  text-decoration: underline;
+  margin-top: 10px;
+}
+.table__parentSubHeader {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 600px;
+  margin: 8px auto 5px auto;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+.table__parentSubHeader > span {
+  display: flex;
+  flex-direction: column;
+}
+.table__parentSubHeader > * {
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
+.table__listing {
+  width: 100%;
+  max-width: 1200px;
+  margin: 5px auto 25px auto;
+}
+.table__listingHeader {
+  color: white;
+  background: linear-gradient(
+    to right,
+    var(--theme-color-1),
+    var(--theme-color-2)
+  );
+}
+.table__listingHeader > th {
+  text-align: left;
+  padding: 6px;
+}
+.table__listingItem {
+  background-color: #f1f1f1;
+}
+.table__listingItem > td {
+  padding: 5px;
+  text-align: left;
+}
+/* showing tables totals */
+.table__listingFooter > th {
+  padding: 5px 10px;
+  text-align: left;
+  background: linear-gradient(to right, #ebeded, #d7dbda);
+  color: dodgerblue;
 }
 
 /* end of dialog components */

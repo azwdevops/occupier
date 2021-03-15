@@ -19,6 +19,7 @@ import ActivateAccount from "./pages/ActivateAccount";
 import ResetPasswordConfirm from "./pages/ResetPasswordConfirm";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
+import MyListings from "./pages/agent/MyListings/MyListings";
 
 // import redux API
 import { get_user } from "./redux/actions/auth";
@@ -53,6 +54,7 @@ function App() {
             component={ActivateAccount}
           />
           {/* authenticated routes */}
+          <PrivateRoute exact path="/my-listings/" component={MyListings} />
           <PrivateRoute exact path="/profile" component={Profile} />
           <PrivateRoute exact path="/dashboard/" component={Dashboard} />
           <Route component={NotFound} />
