@@ -106,6 +106,7 @@ const AddListing = (props) => {
           </label>
           <input
             type="text"
+            name="name"
             className="input__left"
             value={name}
             onChange={handleChange}
@@ -115,7 +116,7 @@ const AddListing = (props) => {
           </label>
           <input
             type="number"
-            name=""
+            name="house_no"
             className="input__right"
             value={house_no}
             onChange={handleChange}
@@ -127,7 +128,7 @@ const AddListing = (props) => {
           </label>
           <input
             type="number"
-            name=""
+            name="house_size"
             className="input__left"
             value={house_size}
             onChange={handleChange}
@@ -137,7 +138,7 @@ const AddListing = (props) => {
           </label>
           <input
             type="number"
-            name=""
+            name="bedrooms"
             min="1"
             max="100"
             className="input__right"
@@ -151,7 +152,7 @@ const AddListing = (props) => {
           </label>
           <input
             type="number"
-            name=""
+            name="bathrooms"
             min="1"
             max="100"
             className="input__left"
@@ -164,7 +165,7 @@ const AddListing = (props) => {
           </label>
           <input
             type="number"
-            name=""
+            name="price"
             min="1"
             className="input__right"
             value={price}
@@ -181,7 +182,7 @@ const AddListing = (props) => {
             Listing Type
           </label>
           <select
-            name=""
+            name="listing_type"
             className="select__left"
             onChange={handleChange}
             value={listing_type}
@@ -196,7 +197,7 @@ const AddListing = (props) => {
             Location
           </label>
           <select
-            name=""
+            name="location"
             className="select__right"
             value={location}
             onChange={handleChange}
@@ -226,7 +227,7 @@ const AddListing = (props) => {
             Status
           </label>
           <select
-            name=""
+            name="status"
             className="select__right"
             value={status}
             onChange={handleChange}
