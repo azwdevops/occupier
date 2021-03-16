@@ -122,5 +122,11 @@ def unknown_error():
 def invalid_serializer():
     return Response({'detail': 'Ensure all required fields have valid data'}, status=400)
 
+# invalid user
+
+
+def invalid_user():
+    return Response({'detail': 'invalid user credentials'}, status=400)
+
 
 #####################################  END OF ERROR FUNCTIONS #############################################

@@ -38,3 +38,7 @@ export const changePassword = (passwords, userId) =>
 
 // get user data
 export const getUser = () => API.get("/api/user/get-user-data/");
+
+// LISTING API'S
+export const createNewListing = (body, userId) =>
+  API.post(`/api/agent/create-new-listing/${userId}/`, body);

@@ -156,11 +156,11 @@ a {
   cursor: pointer;
 }
 .form__Buttons > button:nth-child(1) {
-  background-color: red;
+  background: linear-gradient(to right, rgb(179, 79, 79), rgb(231, 62, 62));
   justify-self: start;
 }
 .form__Buttons > button:nth-child(2) {
-  background-color: dodgerblue;
+  background:linear-gradient(to right, var(--theme-color-1), var(--theme-color-2));
   justify-self: end;
 }
 

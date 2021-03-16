@@ -1,9 +1,14 @@
 from uuid import uuid4
+from os import sys
 
 from django.db.models import Model, CharField, UUIDField, ImageField, ForeignKey, TextField, CASCADE, BooleanField, \
     DateTimeField, PositiveIntegerField, PROTECT, PositiveSmallIntegerField
 from django.contrib.postgres.fields import CICharField
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
+from PIL import Image
+from io import BytesIO
 
 from user.choices import locations
 from agent.choices import listing_type, listing_status
@@ -33,6 +38,21 @@ class Listing(Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if self.main_photo:
+            image = Image.open(self.main_photo)
+            output = BytesIO()
+
+            # resize image
+            image = image.resize((1280, 583))
+            # after modifications save the output
+            image.save(output, format='JPEG', quality=90)
+            output.seek(0)
+            # change the image field value to be the newly modified image value
+            self.main_photo = InMemoryUploadedFile(
+                output, 'ImageField', f"{self.main_photo.name.split('.')[0]}", 'image/jpeg', sys.getsizeof(output), None)
+        super(Listing, self).save(*args, **kwargs)
 
 # model to hold listing extra pictures
 

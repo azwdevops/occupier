@@ -7,4 +7,5 @@ urlpatterns = [
 
     # include api urls
     path('api/user/', include('user.api.urls')),
+    path('api/agent/', include('agent.api.urls')),
 ]
