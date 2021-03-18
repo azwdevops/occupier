@@ -51,7 +51,7 @@ class Listing(Model):
             output.seek(0)
             # change the image field value to be the newly modified image value
             self.main_photo = InMemoryUploadedFile(
-                output, 'ImageField', f"{self.main_photo.name.split('.')[0]}", 'image/jpeg', sys.getsizeof(output), None)
+                output, 'ImageField', "%s.jpg" % self.main_photo.name.split('.')[0], 'image/jpeg', sys.getsizeof(output), None)
         super(Listing, self).save(*args, **kwargs)
 
 # model to hold listing extra pictures

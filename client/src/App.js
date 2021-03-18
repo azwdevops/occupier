@@ -12,7 +12,7 @@ import PrivateRoute from "./shared/PrivateRoute";
 // import components/pages
 import Header from "./components/common/Header";
 // import Footer from "./components/common/Footer";
-import Home from "./pages/Home";
+import Home from "./pages/Home/Home";
 import Sidebar from "./components/common/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import ActivateAccount from "./pages/ActivateAccount";
@@ -20,6 +20,7 @@ import ResetPasswordConfirm from "./pages/ResetPasswordConfirm";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import MyListings from "./pages/agent/MyListings/MyListings";
+import ListingDetail from "./pages/ListingDetail/ListingDetail";
 
 // import redux API
 import { get_user } from "./redux/actions/auth";
@@ -42,6 +43,7 @@ function App() {
         <Sidebar />
         <Switch>
           {/* unauthenticated routes */}
+          <Route exact path="/listings/:listingId/" component={ListingDetail} />
           <Route exact path="/" component={Home} />
           <Route
             exact

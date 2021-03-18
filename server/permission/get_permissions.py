@@ -20,7 +20,7 @@ def check_permission(app_name, model, codename, user):
     groups = user.groups.all()
     # if user has no direct permission, test if user has group permission
     for group in groups:
-        group_permission = user_permission = get_object_or_none(
+        group_permission = get_object_or_none(
             Permission, group=group, codename=codename, content_type__model=model, content_type__app_label=app_name)
         if group_permission:
             return True

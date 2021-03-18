@@ -1,3 +1,8 @@
-from django.contrib import admin
+from django.contrib.admin import ModelAdmin, register
 
-# Register your models here.
+from agent.models import Listing
+
+
+@register(Listing)
+class ListingAdmin(ModelAdmin):
+    list_display = ('name',)

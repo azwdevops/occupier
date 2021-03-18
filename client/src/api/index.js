@@ -40,5 +40,8 @@ export const changePassword = (passwords, userId) =>
 export const getUser = () => API.get("/api/user/get-user-data/");
 
 // LISTING API'S
-export const createNewListing = (body, userId) =>
+export const createNewListing = (userId, body) =>
   API.post(`/api/agent/create-new-listing/${userId}/`, body);
+
+// get listings
+export const getListings = () => API.get(`/api/agent/get-listings/`);

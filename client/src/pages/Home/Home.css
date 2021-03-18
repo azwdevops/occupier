@@ -1,0 +1,20 @@
+.home__page {
+  padding: 15px;
+}
+.home__page > h3 {
+  color: dodgerblue;
+  text-align: center;
+  text-decoration: underline;
+  margin-bottom: 10px;
+}
+.home__pageListings {
+  max-width: 95vw;
+  margin: 10px auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.home__pageListings > a {
+  color: unset;
+}

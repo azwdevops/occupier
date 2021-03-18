@@ -1,0 +1,25 @@
+.listing {
+  width: 250px;
+  height: 270px;
+  border: 2px lightgray solid;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  margin: 10px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.listing:hover {
+  opacity: 0.5;
+}
+.listing > img {
+  max-width: 100%;
+  object-fit: cover;
+  height: 200px;
+  border-radius: 10px;
+}
+.listing > p {
+  padding-left: 5px;
+  margin-top: 5px;
+  font-size: 0.95rem;
+}

@@ -16,5 +16,9 @@ const globals = {
       "file",
     ],
   },
+  dev: true,
+  testProduction: false,
+  liveProduction: false,
+  devHome: "http://localhost:8000",
 };
 export default globals;

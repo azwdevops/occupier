@@ -16,7 +16,7 @@ import { START_LOADING } from "../../redux/actions/types";
 import { create_new_listing } from "../../redux/actions/listing";
 
 const AddListing = (props) => {
-  const { openAddListingForm, locations, loading, alert } = props; // get state from props
+  const { openAddListingForm, locations, loading, alert, userId } = props; // get state from props
   const { setOpenAddListingForm, startLoading, createNewListing } = props; // get dispatch actions from props
   const editor = useRef("");
   const [description, setDescription] = useState("");
@@ -51,7 +51,7 @@ const AddListing = (props) => {
 
   // handle change
   const handleChange = (e) => {
-    setNewListing({ ...newListing, [e.target.value]: e.target.value });
+    setNewListing({ ...newListing, [e.target.name]: e.target.value });
   };
 
   // handle image upload
@@ -83,14 +83,15 @@ const AddListing = (props) => {
     body.append("house_size", house_size);
     body.append("bedrooms", bedrooms);
     body.append("bathrooms", bathrooms);
+    body.append("price", price);
     body.append("listing_type", listing_type);
     body.append("location", location);
-    body.append("main_photo", main_photo);
+    body.append("name", name);
     body.append("status", status);
 
     startLoading();
 
-    createNewListing(body, resetForm);
+    createNewListing(userId, body, resetForm);
   };
 
   return (
@@ -220,7 +221,6 @@ const AddListing = (props) => {
             type="file"
             name=""
             className="input__left"
-            value={main_photo}
             onChange={handleImageChange}
           />
           <label htmlFor="" className="label__right">
@@ -269,14 +269,15 @@ const mapStateToProps = (state) => {
     locations: state.auth.locations,
     loading: state.shared.loading,
     alert: state.shared.alert,
+    userId: state.auth.user.id,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     startLoading: () => dispatch({ type: START_LOADING }),
-    createNewListing: (body, resetForm) =>
-      dispatch(create_new_listing(body, resetForm)),
+    createNewListing: (userId, body, resetForm) =>
+      dispatch(create_new_listing(userId, body, resetForm)),
   };
 };
 
