@@ -129,4 +129,8 @@ def invalid_user():
     return Response({'detail': 'invalid user credentials'}, status=400)
 
 
+def invalid_listing():
+    return Response({'detail': 'Invalid listing specified'}, status=400)
+
+
 #####################################  END OF ERROR FUNCTIONS #############################################
