@@ -55,7 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = BooleanField(default=False)
     is_superuser = BooleanField(default=False)
     photo = ImageField(
-        upload_to='user_images', default='/user_images/avatar.png')
+        upload_to='user_images', default='user_images/avatar.png')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

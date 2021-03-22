@@ -8,9 +8,8 @@
   --first-color: #4723d9;
   --first-color-light: #afa5d9;
   --white-color: #f7f6fb;
-  --theme-color-1:dodgerblue;
-  --theme-color-2:#5e1bc2;
-
+  --theme-color-1: dodgerblue;
+  --theme-color-2: #5e1bc2;
 
   /*===== Font and typography =====*/
   --body-font: "Nunito", sans-serif;
@@ -46,7 +45,7 @@ button {
   cursor: pointer;
   border: none;
   outline: none;
-  padding:5px 10px;
+  padding: 5px 10px;
   border-radius: 15px;
 }
 .button:hover,
@@ -90,43 +89,26 @@ a {
 
 /* for two items sharing the width */
 .dialog__row {
-  display: grid;
+  display: flex;
   margin: 10px auto;
-  column-gap: 20px;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  max-width: 95%;
+  max-width: 100%;
+  justify-content: space-between;
 }
-.dialog__row > label {
+.dialog__row > span {
+  display: flex;
+  flex: 0.48;
+  flex-direction: column;
+}
+.dialog__row label {
   color: purple;
   font-weight: bold;
   padding: 3px 8px;
 }
-.dialog__row > .label__left {
-  grid-column: 1/4;
-  grid-row: 1;
-}
-.dialog__row > .label__right {
-  grid-column: 4/7;
-  grid-row: 1;
-}
-.dialog__row > .input__left,
-.dialog__row > .select__left {
-  grid-column: 1/4;
-  grid-row: 2;
-  max-width: 95%;
-}
-.dialog__row > .input__right,
-.dialog__row > .select__right {
-  grid-column: 4/7;
-  grid-row: 2;
-  max-width: 100%;
-}
 
-.dialog__row > input,
-.dialog__row > select,
-.dialog__rowSingleItem > input,
-.dialog__rowSingleItem > select {
+.dialog__row input,
+.dialog__row select,
+.dialog__rowSingleItem input,
+.dialog__rowSingleItem select {
   padding: 7px 10px;
   border-radius: 10px;
   border: 2px solid lightgray;
@@ -160,7 +142,11 @@ a {
   justify-self: start;
 }
 .form__Buttons > button:nth-child(2) {
-  background:linear-gradient(to right, var(--theme-color-1), var(--theme-color-2));
+  background: linear-gradient(
+    to right,
+    var(--theme-color-1),
+    var(--theme-color-2)
+  );
   justify-self: end;
 }
 
@@ -233,8 +219,8 @@ a {
 
 /* table styling */
 .table__parent {
-  max-width:100%;
-  margin:10vh auto 20px auto;
+  max-width: 100%;
+  margin: 10vh auto 20px auto;
 }
 
 .table__parentHeader {

@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from core.views import verify_user, invalid_user, invalid_serializer, get_object_or_none, invalid_listing
 from permission.get_permissions import CanCreateListing
 
-from agent.api.serializers import ListingSerializer
+from agent.api.serializers import ListingSerializer, ListingViewSerializer
 from agent.models import Listing, ListingPhoto
 
 
@@ -60,7 +60,7 @@ class GetSingleListingView(APIView):
 
         if not listing:
             return invalid_listing()
-        listing_data = ListingSerializer(listing).data
+        listing_data = ListingViewSerializer(listing).data
 
         listing_photos = ListingPhoto.objects.filter(listing=listing)
         listing_photos_data = []
