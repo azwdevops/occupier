@@ -9,7 +9,7 @@ class ListingSerializer(ModelSerializer):
     class Meta:
         model = Listing
         fields = ('name', 'main_photo', 'description', 'house_no', 'house_size',
-                  'bedrooms', 'bathrooms', 'listing_type', 'location', 'main_photo', 'status', 'price', 'id')
+                  'bedrooms', 'bathrooms', 'listing_type', 'location', 'status', 'price', 'id')
 
 
 class ListingViewSerializer(ModelSerializer):

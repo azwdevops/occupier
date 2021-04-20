@@ -101,28 +101,26 @@ const Signup = (props) => {
           {alert.status && alert.detail}
         </p>
         <div className="dialog__row">
-          <label htmlFor="" className="label__left">
-            First Name
-          </label>
-          <input
-            type="text"
-            name="first_name"
-            value={first_name}
-            className="input__left"
-            onChange={handleChange}
-            required
-          />
-          <label htmlFor="" className="label__right">
-            Last Name
-          </label>
-          <input
-            type="text"
-            name="last_name"
-            value={last_name}
-            className="input__right"
-            onChange={handleChange}
-            required
-          />
+          <span>
+            <label htmlFor="">First Name</label>
+            <input
+              type="text"
+              name="first_name"
+              value={first_name}
+              onChange={handleChange}
+              required
+            />
+          </span>
+          <span>
+            <label htmlFor="">Last Name</label>
+            <input
+              type="text"
+              name="last_name"
+              value={last_name}
+              onChange={handleChange}
+              required
+            />
+          </span>
         </div>
         {loading && (
           <CircularProgress
@@ -130,100 +128,89 @@ const Signup = (props) => {
           />
         )}
         <div className="dialog__row">
-          <label htmlFor="" className="label__left">
-            Username
-          </label>
-          <input
-            type="text"
-            name="username"
-            value={username}
-            className="input__left"
-            onChange={handleChange}
-            required
-          />
-          <label htmlFor="" className="label__right">
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            username={email}
-            className="input__right"
-            onChange={handleChange}
-            required
-          />
+          <span>
+            <label htmlFor="">Username</label>
+            <input
+              type="text"
+              name="username"
+              value={username}
+              onChange={handleChange}
+              required
+            />
+          </span>
+          <span>
+            <label htmlFor="">Email</label>
+            <input
+              type="email"
+              name="email"
+              username={email}
+              onChange={handleChange}
+              required
+            />
+          </span>
         </div>
         <div className="dialog__row">
-          <label htmlFor="" className="label__left">
-            Phone
-          </label>
-          <input
-            type="number"
-            name="phone"
-            className="input__left"
-            minLength="10"
-            maxLength="10"
-            value={phone}
-            onChange={handleChange}
-          />
-          <label htmlFor="" className="label__right">
-            Location
-          </label>
-          <select
-            name="location"
-            className="select__right"
-            value={location}
-            onChange={handleChange}
-          >
-            <option value="">Select location</option>
-            {locations?.map((location, index) => (
-              <option value={location} key={index}>
-                {location}
-              </option>
-            ))}
-          </select>
+          <span>
+            <label htmlFor="">Phone</label>
+            <input
+              type="number"
+              name="phone"
+              minLength="10"
+              maxLength="10"
+              value={phone}
+              onChange={handleChange}
+            />
+          </span>
+          <span>
+            <label htmlFor="">Location</label>
+            <select name="location" value={location} onChange={handleChange}>
+              <option value="">Select location</option>
+              {locations?.map((location, index) => (
+                <option value={location} key={index}>
+                  {location}
+                </option>
+              ))}
+            </select>
+          </span>
         </div>
         <div className="dialog__row">
-          <label htmlFor="" className="label__left">
-            Password
-          </label>
-          <input
-            type="password"
-            name="password"
-            value={password}
-            className="input__left"
-            onChange={handleChange}
-            required
-          />
-          <label htmlFor="" className="label__right">
-            Confirm Password
-          </label>
-          <input
-            type="password"
-            name="confirm_password"
-            value={confirm_password}
-            className="input__right"
-            onChange={handleChange}
-            required
-          />
+          <span>
+            <label htmlFor="">Password</label>
+            <input
+              type="password"
+              name="password"
+              value={password}
+              onChange={handleChange}
+              required
+            />
+          </span>
+          <span>
+            <label htmlFor="">Confirm Password</label>
+            <input
+              type="password"
+              name="confirm_password"
+              value={confirm_password}
+              onChange={handleChange}
+              required
+            />
+          </span>
         </div>
         <div className="dialog__row">
-          <label htmlFor="" className="label__left">
-            Account Type
-          </label>
-          <select
-            name="account_type"
-            className="select__left"
-            value={account_type}
-            onChange={handleChange}
-          >
-            <option value="">Select account type</option>
-            {account_types?.map((account_type, index) => (
-              <option value={account_type} key={index}>
-                {account_type}
-              </option>
-            ))}
-          </select>
+          <span>
+            <label htmlFor="">Account Type</label>
+            <select
+              name="account_type"
+              value={account_type}
+              onChange={handleChange}
+            >
+              <option value="">Select account type</option>
+              {account_types?.map((account_type, index) => (
+                <option value={account_type} key={index}>
+                  {account_type}
+                </option>
+              ))}
+            </select>
+          </span>
         </div>
         <div className="form__Buttons">
           <button type="button" onClick={closeSignupForm}>

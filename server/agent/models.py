@@ -29,12 +29,17 @@ class Listing(Model):
     bathrooms = CharField(max_length=50)
     price = PositiveIntegerField()
     listing_type = CharField(max_length=80, choices=listing_type)
-    location = CharField(max_length=255, choices=locations)
+    location = CharField(max_length=255)
     geo_location = CharField(max_length=255, null=True)
     main_photo = ImageField(upload_to='listing_photos/%Y/%m/%d')
     is_active = BooleanField(default=True)
     status = CharField(choices=listing_status, max_length=100)
     listing_date = DateTimeField(auto_now_add=True)
+
+    # if a house is submitted from agent subdomain, the following extra fields are needed
+    from_agent_subdomain = BooleanField(default=False)
+    agent_house_id = CharField(null=True, blank=True, max_length=120)
+    agent_phone = CharField(null=True, blank=True, max_length=120)
 
     def __str__(self):
         return self.name
@@ -42,12 +47,13 @@ class Listing(Model):
     def save(self, *args, **kwargs):
         if self.main_photo:
             image = Image.open(self.main_photo)
+            rgb_image = image.convert('RGB')
             output = BytesIO()
 
             # resize image
-            image = image.resize((1280, 583))
+            rgb_image = rgb_image.resize((1280, 583))
             # after modifications save the output
-            image.save(output, format='JPEG', quality=90)
+            rgb_image.save(output, format='JPEG', quality=90)
             output.seek(0)
             # change the image field value to be the newly modified image value
             self.main_photo = InMemoryUploadedFile(

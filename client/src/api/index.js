@@ -45,3 +45,7 @@ export const createNewListing = (userId, body) =>
 
 // get listings
 export const getListings = () => API.get(`/api/agent/get-listings/`);
+
+// tenant book appointment to view listing
+export const tenantBookAppointment = (userId, body) =>
+  API.post(`/api/tenant/book-viewing-appointment/${userId}/`, body);

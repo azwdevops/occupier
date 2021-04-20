@@ -133,4 +133,21 @@ def invalid_listing():
     return Response({'detail': 'Invalid listing specified'}, status=400)
 
 
+# invalid serializer with error message
+
+
+def invalid_serializer_error_message(serializer, serializer_fields):
+    for field in serializer_fields:
+        # to avoid ke error in case one of the fields has valid data, we use try /except block
+        try:
+            if serializer.errors[field][0] == 'This field may not be blank.':
+                # since the blank error does not show field name, we use custom error
+                return f'{field} should not be blank'
+            else:
+                # for other error types, we get the specific error
+                return serializer.errors[field][0]
+        except:
+            pass
+
+
 #####################################  END OF ERROR FUNCTIONS #############################################
